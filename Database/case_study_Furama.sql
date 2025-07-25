@@ -214,7 +214,7 @@ INSERT INTO hop_dong_chi_tiet (so_luong, ma_hop_dong, ma_dich_vu_di_kem) VALUES
 SELECT *
 FROM nhan_vien
 WHERE (ho_ten LIKE 'H%' OR ho_ten LIKE 'T%' OR ho_ten LIKE 'K%')
-AND LENGTH(ho_ten) <= 15
+AND LENGTH(ho_ten) <= 15;
 
 -- Câu 3
 SELECT *
@@ -286,3 +286,76 @@ AND dv.ma_dich_vu NOT IN (
     WHERE YEAR(hd.ngay_lam_hop_dong) = 2021
     GROUP BY hd.ma_dich_vu
 );
+
+-- Câu 8
+-- Cách 1
+select distinct ho_ten
+from khach_hang;
+
+-- Cách 2
+select ho_ten
+from khach_hang
+group by ho_ten;
+
+-- Cách 3
+
+-- Câu 9
+select month(ngay_lam_hop_dong) as thang, count(hd.ma_khach_hang)
+from hop_dong hd
+where year(ngay_lam_hop_dong) = 2021
+group by thang
+order by thang;
+
+-- Câu 10
+select hd.ma_hop_dong, hd.ngay_lam_hop_dong, hd.ngay_ket_thuc, hd.tien_dat_coc, if(sum(hdct.so_luong) >0, sum(hdct.so_luong), 0) as so_luong_dich_vu_di_kem
+from hop_dong hd
+left join hop_dong_chi_tiet hdct on hd.ma_hop_dong = hdct.ma_hop_dong
+group by hd.ma_hop_dong, hd.ngay_lam_hop_dong, hd.ngay_ket_thuc, hd.tien_dat_coc;
+
+-- Câu 11
+select distinct *
+from dich_vu_di_kem dvdk
+join hop_dong_chi_tiet hdct on dvdk.ma_dich_vu_di_kem = hdct.ma_dich_vu_di_kem
+join hop_dong hd on hdct.ma_hop_dong = hd.ma_hop_dong
+join khach_hang kh on hd.ma_khach_hang = kh.ma_khach_hang
+join loai_khach lk on kh.ma_loai_khach = lk.ma_loai_khach
+where lk.ten_loai_khach = 'Diamond'
+and (kh.dia_chi like '%Vinh%' or kh.dia_chi like '%Quảng Ngãi%');
+
+-- Câu 12
+select hd.ma_hop_dong, nv.ho_ten, kh.ho_ten, kh.so_dien_thoai, dv.ten_dich_vu, if(sum(hdct.so_luong) > 0, sum(hdct.so_luong), 0) as so_luong_dich_vu_di_kem, hd.tien_dat_coc
+from hop_dong hd
+join khach_hang kh on hd.ma_khach_hang = kh.ma_khach_hang
+join nhan_vien nv on hd.ma_nhan_vien = nv.ma_nhan_vien
+join dich_vu dv on hd.ma_dich_vu = dv.ma_dich_vu 
+left join hop_dong_chi_tiet hdct on hd.ma_hop_dong = hdct.ma_hop_dong
+where hd.ngay_lam_hop_dong between '2020-10-01' and '2020-12-31'
+and hd.ngay_lam_hop_dong not in (
+	select hdd.ngay_lam_hop_dong
+    from hop_dong hdd
+    where hdd.ngay_lam_hop_dong between '2021-01-01' and '2020-6-31'
+)
+group by hd.ma_hop_dong;
+
+-- Câu 13
+select dvdk.ma_dich_vu_di_kem, dvdk.ten_dich_vu_di_kem, sum(hdct.so_luong) as dich_vu_di_kem
+from hop_dong hd
+join khach_hang kh on hd.ma_khach_hang = kh.ma_khach_hang
+left join hop_dong_chi_tiet hdct on hd.ma_hop_dong = hdct.ma_hop_dong
+join dich_vu_di_kem dvdk on hdct.ma_dich_vu_di_kem = dvdk.ma_dich_vu_di_kem
+group by dvdk.ma_dich_vu_di_kem, dvdk.ten_dich_vu_di_kem
+having sum(hdct.so_luong) >= all (
+	select sum(so_luong)
+    from hop_dong_chi_tiet
+    group by ma_dich_vu_di_kem
+);
+
+-- Câu 14
+select hd.ma_hop_dong, ldv.ten_loai_dich_vu, dvdk.ten_dich_vu_di_kem, count(hdct.ma_dich_vu_di_kem) as so_lan_su_dung
+from hop_dong hd
+left join hop_dong_chi_tiet hdct on hd.ma_hop_dong = hdct.ma_hop_dong
+join dich_vu_di_kem dvdk on hdct.ma_dich_vu_di_kem = dvdk.ma_dich_vu_di_kem
+join dich_vu dv on hd.ma_dich_vu = dv.ma_dich_vu
+join loai_dich_vu ldv on dv.ma_loai_dich_vu = ldv.ma_loai_dich_vu
+group by hd.ma_hop_dong, ldv.ten_loai_dich_vu, dvdk.ten_dich_vu_di_kem
+having count(hdct.ma_dich_vu_di_kem) = 1; 
