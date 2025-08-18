@@ -1,8 +1,11 @@
 package org.example.product.controller;
 
+import org.example.product.dto.ProductDTO;
 import org.example.product.model.entity.Product;
-import org.example.product.model.service.IProductService;
-import org.example.product.model.service.ProductService;
+import org.example.product.model.service.category.CategoryService;
+import org.example.product.model.service.category.ICategoryService;
+import org.example.product.model.service.product.IProductService;
+import org.example.product.model.service.product.ProductService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +18,7 @@ import java.util.List;
 @WebServlet(name = "ProductController", value = "/products")
 public class ProductController extends HttpServlet {
     private IProductService productService = new ProductService();
+    private ICategoryService categoryService = new CategoryService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -55,21 +59,22 @@ public class ProductController extends HttpServlet {
         String maDH = req.getParameter("maDH");
         String name = req.getParameter("name");
         String description = req.getParameter("description");
-        String category = req.getParameter("category");
+        int categoryId = Integer.parseInt(req.getParameter("categoryId"));
         double price = Double.parseDouble(req.getParameter("price"));
         String status = req.getParameter("status");
-        Product product = new Product(maDH,name,description,category,price,status);
+        Product product = new Product(maDH,name,description,price,status,categoryId);
         productService.addProduct(product);
         resp.sendRedirect("/products");
     }
 
     private void showListProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Product> products = productService.getProductList();
+        List<ProductDTO> products = productService.getProductList();
         req.setAttribute("productList", products);
         req.getRequestDispatcher("view/product/productList.jsp").forward(req,resp);
     }
 
     private void showCreateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("category", categoryService.getCategories());
         req.getRequestDispatcher("view/product/createProduct.jsp").forward(req,resp);
     }
 

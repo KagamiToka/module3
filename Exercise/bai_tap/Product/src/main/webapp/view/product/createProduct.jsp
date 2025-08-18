@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: NamNguyen
-  Date: 8/8/2025
-  Time: 8:45 PM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -65,11 +59,16 @@
     <input name="maDH" type="text" placeholder="Nhập mã đơn hàng..."> <br>
     <input name="name" type="text" placeholder="Nhập tên sản phẩm..."> <br>
     <input name="description" type="text" placeholder="Nhập mô tả..."> <br>
-    <input name="category" type="text" placeholder="Nhập loại sản phầm..."> <br>
+    <select name="categoryId">
+      <option disabled selected>--------Loại Sản Phẩm-------</option>
+      <c:forEach items="${category}" var="cate">
+        <option value="${cate.getId()}">${cate.getName()}</option>
+      </c:forEach>
+    </select>
     <input name="price" type="number" placeholder="Nhập giá..."> <br>
-    <select>
-      <option name="status">Active</option>
-      <option name="status">Inactive</option>
+    <select name="status">
+      <option>Active</option>
+      <option>Inactive</option>
     </select> <br>
     <button type="submit">Create product</button>
   </form>

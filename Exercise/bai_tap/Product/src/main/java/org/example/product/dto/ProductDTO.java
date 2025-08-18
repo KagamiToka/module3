@@ -1,23 +1,23 @@
-package org.example.product.model.entity;
+package org.example.product.dto;
 
-public class Product {
+public class ProductDTO {
     private String maDH;
     private String name;
     private String description;
     private double price;
     private String status;
-    private int categoryId;
+    private String categoryName;
 
-    public Product() {
+    public ProductDTO() {
     }
 
-    public Product(String maDH, String name, String description, double price, String status, int categoryId) {
+    public ProductDTO(String maDH, String name, String description, double price, String status, String categoryName) {
         this.maDH = maDH;
         this.name = name;
         this.description = description;
         this.price = price;
         this.status = status;
-        this.categoryId = categoryId;
+        this.categoryName = categoryName;
     }
 
     public String getMaDH() {
@@ -60,10 +60,11 @@ public class Product {
         this.status = status;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public String getCategoryName() {
+        return categoryName;
     }
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }

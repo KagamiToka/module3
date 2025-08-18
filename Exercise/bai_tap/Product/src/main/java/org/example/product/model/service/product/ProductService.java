@@ -1,8 +1,9 @@
-package org.example.product.model.service;
+package org.example.product.model.service.product;
 
+import org.example.product.dto.ProductDTO;
 import org.example.product.model.entity.Product;
-import org.example.product.model.repository.IProductRepository;
-import org.example.product.model.repository.ProductRepository;
+import org.example.product.model.repository.product.IProductRepository;
+import org.example.product.model.repository.product.ProductRepository;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class ProductService implements IProductService {
 
 
     @Override
-    public List<Product> getProductList() {
+    public List<ProductDTO> getProductList() {
         return productRepository.getProductList();
     }
 

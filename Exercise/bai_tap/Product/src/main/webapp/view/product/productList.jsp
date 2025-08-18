@@ -59,17 +59,55 @@
       <th>Loại</th>
       <th>Giá</th>
       <th>Trạng thái</th>
+      <th>Hoạt động</th>
     </tr>
     <c:forEach var="product" items="${productList}">
       <tr>
         <td>${product.getMaDH()}</td>
         <td>${product.getName()}</td>
         <td>${product.getDescription()}</td>
-        <td>${product.getCategory()}</td>
+        <td>${product.getCategoryName()}</td>
         <td>${product.getPrice()}</td>
         <td>${product.getStatus()}</td>
+        <td>
+          <button onclick="getInfoDelete('${product.getMaDH()}','${product.getName()}')" data-bs-toggle="modal"
+                  data-bs-target="#deleteModal" class="btn btn-sm btn-danger">Xoá
+          </button>
+        </td>
       </tr>
     </c:forEach>
   </table>
+
+  <!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form action="/students?action=delete" method="post">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body">
+            <input hidden="hidden" id="deleteId" name="deleteId">
+            <span>Bạn có muốn xoá sinh viên </span>
+            <span style="color: red" id="deleteName"></span>
+            <span> không???</span>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+            <button type="submit" class="btn btn-primary">Xoá</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    function getInfoDelete(id, name) {
+      document.getElementById("deleteName").innerText = name;
+      document.getElementById("deleteId").value = id;
+    }
+  </script>
 </body>
 </html>
