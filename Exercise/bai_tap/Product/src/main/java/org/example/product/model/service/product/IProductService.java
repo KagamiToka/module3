@@ -9,4 +9,5 @@ public interface IProductService {
     List<ProductDTO> getProductList();
     boolean addProduct(Product product);
     Product getProduct(String category);
+    boolean deleteProduct(String maDH);
 }

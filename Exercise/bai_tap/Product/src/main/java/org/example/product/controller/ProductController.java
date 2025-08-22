@@ -48,7 +48,8 @@ public class ProductController extends HttpServlet {
             case "add":
                 createProduct(req,resp);
                 break;
-            case "edit":
+            case "delete":
+                deleteProduct(req,resp);
                 break;
             default:
                 showListProduct(req,resp);
@@ -82,5 +83,19 @@ public class ProductController extends HttpServlet {
         String category = req.getParameter("category");
         productService.getProduct(category);
         req.getRequestDispatcher("view/product/productList.jsp").forward(req,resp);
+    }
+
+    private void deleteProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String maDH = req.getParameter("deleteId");
+        boolean isDeleSuccess = productService.deleteProduct(maDH);
+        String message = "Not delete success";
+        if (isDeleSuccess) {
+            message = "Product deleted successfully";
+        }
+        try {
+            resp.sendRedirect("/products?message="+message);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

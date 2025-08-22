@@ -31,3 +31,12 @@ insert into Product(maDH, name, description, category_id, price, status) values
 ("MH05", "Corsair Virtuoso RGB Wireless", "Premium wireless gaming headset with 7.1 surround", 4, 4687650, "active");
 
 select * from Product;
+
+select p.maDH, p.name, p.description, c.name as category, p.price, p.status
+from Product p 
+join Category c on p.category_id = c.id;
+
+select p.maDH, p.name, p.description, c.name as category, p.price, p.status
+from Product p 
+join Category c on p.category_id = c.id
+where c.name = "Laptop";

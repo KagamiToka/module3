@@ -25,4 +25,9 @@ public class ProductService implements IProductService {
     public Product getProduct(String category) {
         return productRepository.getProduct(category);
     }
+
+    @Override
+    public boolean deleteProduct(String maDH) {
+        return productRepository.deleteProduct(maDH);
+    }
 }

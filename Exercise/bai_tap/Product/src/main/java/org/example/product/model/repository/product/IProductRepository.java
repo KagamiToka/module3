@@ -9,5 +9,5 @@ public interface IProductRepository {
     List<ProductDTO> getProductList();
     boolean addProduct(Product product);
     Product getProduct(String category);
-    boolean deleteProduct(String category);
+    boolean deleteProduct(String maDH);
 }

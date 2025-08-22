@@ -17,6 +17,10 @@ public class ProductRepository implements IProductRepository {
                                                     "join Category c on p.category_id = c.id; ";
     private static final String ADD_PRODUCT = "insert into Product (maDH, name, description, category_id, price, status) values (?,?,?,?,?,?)";
     private static final String DELETE_PRODUCT = "delete from Product where maDH = ?";
+    private static final String GET_PRODUCT_BY_CATEGORY = "select p.maDH, p.name, p.description, c.name as category, p.price, p.status\n" +
+                                                            "from Product p \n" +
+                                                            "join Category c on p.category_id = c.id\n" +
+                                                            "where c.name = ?";
 
     @Override
     public List<ProductDTO> getProductList() {
@@ -59,24 +63,28 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public Product getProduct(String category) {
-
+        List<ProductDTO> productList = new ArrayList<>();
+        try (Connection con = DBConnection.getConnectDB()){
+            PreparedStatement ps = con.prepareStatement(GET_PRODUCT_BY_CATEGORY);
+            ps.setString(1, category);
+            ResultSet rs = ps.executeQuery();
+        } catch (SQLException e) {
+            System.out.println("Query error");
+        }
         return null;
     }
 
     @Override
     public boolean deleteProduct(String maDH) {
-        int effectRow = 0;
-        List<ProductDTO> productList = getProductList();
+        int effectRow;
         try(Connection con = DBConnection.getConnectDB()) {
             PreparedStatement ps = con.prepareStatement(DELETE_PRODUCT);
-            if(productList.get(0).getMaDH().toLowerCase().equals(maDH.toLowerCase())) {
                 ps.setString(1, maDH);
-                effectRow = ps.executeUpdate();   
-            }
+                effectRow = ps.executeUpdate();
             return effectRow == 1;
         } catch (SQLException e) {
-            System.out.println("Query error");
-            return false;
+                System.out.println("Query error");
+                return false;
+            }
         }
-    }
 }
